@@ -1,14 +1,14 @@
 {
   "name": "poll-platform-backend",
   "version": "1.0.0",
-  "description": "Poll Platform Backend API",
+  "description": "PollCraft Backend API",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
+    "build": "tsc --project tsconfig.json",
     "start": "node dist/index.js",
     "db:migrate": "ts-node src/config/migrate.ts",
-    "db:seed": "ts-node src/config/seed.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

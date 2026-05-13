@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────────────────────
+#  Production overrides
+#  Usage:
+#    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# ─────────────────────────────────────────────────────────────
+
+version: '3.9'
+
+services:
+
+  postgres:
+    # No port exposure in production – only internal network access
+    ports: []
+
+  backend:
+    build:
+      target: production
+    environment:
+      NODE_ENV: production
+    # No source-code volume mounts in production
+    volumes: []
+    restart: always
+
+  frontend:
+    build:
+      target: production
+      args:
+        VITE_API_URL:    ${VITE_API_URL}
+        VITE_SOCKET_URL: ${VITE_SOCKET_URL}
+    volumes: []
+    restart: always

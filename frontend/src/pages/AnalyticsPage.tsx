@@ -13,6 +13,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Analytics, QuestionAnalytics } from '../types';
 import { formatDistanceToNow, format } from 'date-fns';
+import { getPollShareUrl } from '../utils/shareUrl';
 
 const COLORS = ['#0ea5e9', '#d946ef', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16'];
 
@@ -60,9 +61,9 @@ export const AnalyticsPage: React.FC = () => {
 
   const copyShareLink = () => {
     if (!analytics) return;
-    const url = `${window.location.origin}/p/${analytics.poll.public_link}`;
+    const url = getPollShareUrl(analytics.poll.public_link);
     navigator.clipboard.writeText(url);
-    toast.success('Link copied!');
+    toast.success('Link copied! Share it with anyone on your network 🔗');
   };
 
   if (loading) {
@@ -81,7 +82,7 @@ export const AnalyticsPage: React.FC = () => {
   if (!analytics) return null;
 
   const { poll, total_responses, questions, recent_responses } = analytics;
-  const shareUrl = `${window.location.origin}/p/${poll.public_link}`;
+  const shareUrl = getPollShareUrl(poll.public_link);
 
   return (
     <Layout>

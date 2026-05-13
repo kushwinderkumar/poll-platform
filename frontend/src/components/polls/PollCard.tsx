@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Poll } from '../../types';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { formatDistanceToNow, isPast } from 'date-fns';
+import { getPollShareUrl } from '../../utils/shareUrl';
 
 interface PollCardProps {
   poll: Poll;
@@ -13,10 +14,14 @@ interface PollCardProps {
 
 export const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onPublish }) => {
   const isExpired = poll.expires_at ? isPast(new Date(poll.expires_at)) : false;
-  const shareUrl = `${window.location.origin}/p/${poll.public_link}`;
+  const shareUrl = getPollShareUrl(poll.public_link);
+  const [copied, setCopied] = useState(false);
 
   const copyLink = () => {
-    navigator.clipboard.writeText(shareUrl);
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   const getStatusBadge = () => {
@@ -77,12 +82,14 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onPublish })
           <svg className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
           </svg>
-          <span className="text-xs text-gray-500 truncate flex-1">/p/{poll.public_link}</span>
+          <span className="text-xs text-gray-500 truncate flex-1" title={shareUrl}>{shareUrl}</span>
           <button
             onClick={copyLink}
-            className="text-xs text-primary-600 hover:text-primary-700 font-medium flex-shrink-0"
+            className={`text-xs font-medium flex-shrink-0 transition-colors ${
+              copied ? 'text-green-600' : 'text-primary-600 hover:text-primary-700'
+            }`}
           >
-            Copy
+            {copied ? '✓ Copied!' : 'Copy'}
           </button>
         </div>
 
