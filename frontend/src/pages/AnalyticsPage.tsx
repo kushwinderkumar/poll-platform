@@ -17,6 +17,18 @@ import { getPollShareUrl } from '../utils/shareUrl';
 
 const COLORS = ['#0ea5e9', '#d946ef', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16'];
 
+// Tailwind bg classes matching COLORS order — avoids inline styles
+const BAR_BG_CLASSES = [
+  'bg-sky-500',
+  'bg-fuchsia-500',
+  'bg-emerald-500',
+  'bg-amber-500',
+  'bg-red-500',
+  'bg-violet-500',
+  'bg-cyan-500',
+  'bg-lime-500',
+];
+
 export const AnalyticsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -251,13 +263,13 @@ export const AnalyticsPage: React.FC = () => {
                             {oa.count} <span className="text-gray-400 font-normal">({oa.percentage}%)</span>
                           </span>
                         </div>
-                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                        {/* --pct drives width via CSS var — no inline style on the fill element */}
+                        <div
+                          className="h-3 bg-gray-100 rounded-full overflow-hidden"
+                          style={{ '--pct': `${oa.percentage}%` } as React.CSSProperties}
+                        >
                           <div
-                            className="h-full rounded-full transition-all duration-700"
-                            style={{
-                              width: `${oa.percentage}%`,
-                              backgroundColor: COLORS[oIdx % COLORS.length],
-                            }}
+                            className={`progress-fill ${BAR_BG_CLASSES[oIdx % BAR_BG_CLASSES.length]}`}
                           />
                         </div>
                       </div>

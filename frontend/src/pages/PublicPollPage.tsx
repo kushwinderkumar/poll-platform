@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { api } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { usePollSocket } from '../hooks/useSocket';
-import { PublicPollData, AnswerInput, Question } from '../types';
+import { PublicPollData,  Question } from '../types';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { formatDistanceToNow } from 'date-fns';
@@ -163,11 +163,10 @@ export const PublicPollPage: React.FC = () => {
                       <span className="text-gray-700">{oa.option.text}</span>
                       <span className="font-semibold text-gray-900">{oa.count} ({oa.percentage}%)</span>
                     </div>
-                    <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transition-all duration-700"
-                        style={{ width: `${oa.percentage}%` }}
-                      />
+                    <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden"
+                      style={{ '--pct': `${oa.percentage}%` } as React.CSSProperties}
+                    >
+                      <div className="progress-fill bg-gradient-to-r from-primary-500 to-accent-500" />
                     </div>
                   </div>
                 ))}

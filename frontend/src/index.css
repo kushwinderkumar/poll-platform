@@ -26,3 +26,16 @@
     overflow: hidden;
   }
 }
+
+/* ── Progress bar utility ────────────────────────────────────
+   Usage: <div class="progress-bar" data-pct="73"></div>
+   The width is driven by the CSS custom property --pct,
+   set via a parent [style="--pct:73%"] wrapper — keeps
+   inline styles off the element itself.
+──────────────────────────────────────────────────────────── */
+.progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.7s ease;
+  width: var(--pct, 0%);
+}
