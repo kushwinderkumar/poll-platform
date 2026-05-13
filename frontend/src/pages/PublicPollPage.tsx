@@ -241,6 +241,8 @@ export const PublicPollPage: React.FC = () => {
           </div>
         </div>
 
+        
+
         {/* Questions */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {questions?.map((q: Question, idx: number) => (
