@@ -9,7 +9,6 @@ export const register = async (req: Request, res: Response, next: NextFunction):
   try {
     const { email, name, password } = req.body;
 
-    // Check if user exists
     const existing = await query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
       return next(createError('Email already registered', 409));
@@ -23,7 +22,9 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     );
 
     const user = result.rows[0];
-    const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'] };
+    const jwtOptions: SignOptions = {
+      expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'],
+    };
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET as string,
@@ -55,7 +56,9 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       return next(createError('Invalid email or password', 401));
     }
 
-    const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'] };
+    const jwtOptions: SignOptions = {
+      expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'],
+    };
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET as string,
@@ -72,11 +75,13 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
   }
 };
 
-export const getMe = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+// Use Request signature — cast to AuthRequest internally to access req.user
+export const getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+    const authReq = req as AuthRequest;
     const result = await query(
       'SELECT id, email, name, created_at FROM users WHERE id = $1',
-      [req.user?.userId]
+      [authReq.user?.userId]
     );
 
     if (result.rows.length === 0) {
